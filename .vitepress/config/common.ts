@@ -11,7 +11,7 @@ export function getItem(dir: string, text: string): DefaultTheme.SidebarItem {
 }
 
 export function genSidebar(dir: string) {
-  const filePath = path.resolve(process.cwd(), `docs/posts/${dir}`)
+  const filePath = path.resolve(process.cwd(), `posts/${dir}`)
   const directorys = readDirectory(filePath).directories
   const result = [] as DefaultTheme.SidebarItem[]
 
