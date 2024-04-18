@@ -1,6 +1,7 @@
 {
   "name": "common-technology-stacks",
   "type": "module",
+  "packageManager": "pnpm@9.0.1",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
