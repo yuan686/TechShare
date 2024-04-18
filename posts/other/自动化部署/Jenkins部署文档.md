@@ -1,21 +1,23 @@
-> ## Jenkins部署文档
+# Jenkins远程部署至Windows
+
+## 1.Jenkins版本选择
+
+> **Jenkins部署文档**
 >
 > 本文档主要针对Jenkins从Linux自动化部署到windows的教程
 
-# 一、Jenkins版本选择
-
 为了避免JDK版本不支持而引起的各种问题，建议安装2.401版本
 
-# 二、插件安装
+## 2.插件安装
 
-## 2.1插件下载入口
+### 2.1.插件下载入口
 
 ![image-20240417142225205](Jenkins部署文档.assets/image-20240417142225205.png)
 
 ![image-20240417142304097](Jenkins部署文档.assets/image-20240417142304097.png)
 
 
-## 2.2远程连接插件安装
+### 2.2.远程连接插件安装
 
 ![image-20240417142441979](Jenkins部署文档.assets/image-20240417142441979.png)
 
@@ -39,9 +41,9 @@
 
 
 
-# 三、环境配置
+## 3.环境配置
 
-## 3.1Tools信息配置
+### 3.1.Tools信息配置
 
 首先我们可以在Tool中指定Maven、JDK、Node的位置
 
@@ -53,7 +55,7 @@
 
 ![image-20240417143733543](Jenkins部署文档.assets/image-20240417143733543.png)
 
-## 3.2远程操作信息的配置
+### 3.2.远程操作信息的配置
 
 其次，针对windows的远程部署，我们可以在System中配置【Publish over CIFS】和【Publish over SSH】的基本信息
 
@@ -73,17 +75,17 @@
 
 **这里需要注意，因为我们远程操作的目录是new_cpxt，那么在远程额windows主机上，我们需要将new_cpxt文件夹属性设置为共享**
 
-## 3.3证书配置
+### 3.3.证书配置
 
 接下来，我们需要配置证书账号，也就是对应我们的Git或SVN账号了
 
 ![image-20240417144552135](Jenkins部署文档.assets/image-20240417144552135.png)
 
-# 四、工程的搭建
+## 4.工程的搭建
 
 安装完插件后，就可以搭建我们的工程项目
 
-## 4.1后端部署操作
+### 4.1.后端部署操作
 
 当我们的项目是maven项目，那可以按照我的流程往下看，如果是其他类型的项目，到这就可以划走了
 
@@ -117,21 +119,21 @@
 
 ![image-20240417145230422](Jenkins部署文档.assets/image-20240417145230422.png)
 
-## 4.2前端项目搭建
+### 4.2.前端项目搭建
 
-### 4.2.1选择FreeStyle，自定义内容
+#### 4.2.1.选择FreeStyle，自定义内容
 
 ![image-20240417152034154](Jenkins部署文档.assets/image-20240417152034154.png)
 
-### 4.2.2指定仓库地址
+#### 4.2.2.指定仓库地址
 
 ![image-20240417152143956](Jenkins部署文档.assets/image-20240417152143956-17133385274363.png)
 
-### 4.2.3设置构建前操作
+#### 4.2.3.设置构建前操作
 
 ![image-20240417152217061](Jenkins部署文档.assets/image-20240417152217061.png)
 
-### 4.2.4设置执行脚本
+#### 4.2.4.设置执行脚本
 
 ![image-20240417152243253](Jenkins部署文档.assets/image-20240417152243253.png)
 
@@ -145,29 +147,29 @@ rm -rf dist.tar.gz #删除上次打包生成的压缩文件
 tar -czvf dist.tar.gz dist/ #打包
 ```
 
-### 4.2.5设置构建后操作
+#### 4.2.5.设置构建后操作
 
 ![image-20240417152328501](Jenkins部署文档.assets/image-20240417152328501.png)
 
-# 五、windows准备工作
+## 5.windows准备工作
 
 windows文件夹结构
 
 ![image-20240417150606593](Jenkins部署文档.assets/image-20240417150606593.png)
 
-## 5.1远程连接服务安装
+### 5.1.远程连接服务安装
 
 我使用的远程连接工具是，尽量保持一致，以免不必要的问题
 
 OpenSSH-Win64-v9.2.0.0.msi
 
-## 5.2后端脚本编写
+### 5.2.后端脚本编写
 
 在windows上远程运行jar，需要将这个jar安装为系统服务
 
 实现过程
 
-### 5.2.1下载WinSW.NET4.exe
+#### 5.2.1.下载WinSW.NET4.exe
 
 https://gitcode.com/winsw/winsw/releases?utm_source=csdn_github_accelerator&isLogin=1
 
@@ -175,7 +177,7 @@ https://gitcode.com/winsw/winsw/releases?utm_source=csdn_github_accelerator&isLo
 
 ![image-20240417145805655](Jenkins部署文档.assets/image-20240417145805655.png)
 
-### 5.2.2编写与文件名相同的xml文件
+#### 5.2.2.编写与文件名相同的xml文件
 
 ![image-20240417145721157](Jenkins部署文档.assets/image-20240417145721157.png)
 
@@ -191,7 +193,7 @@ https://gitcode.com/winsw/winsw/releases?utm_source=csdn_github_accelerator&isLo
 </service>
 ```
 
-### 5.2.3安裝服务
+#### 5.2.3.安裝服务
 
 比如我的文件名：zc_cloud.jar
 
@@ -205,13 +207,13 @@ zc_cloud.exe stop      #停止服务
 zc_cloud.exe uninstall #卸载服务
 ```
 
-### 5.2.4安装完后，系统会显示以下服务
+#### 5.2.4.安装完后，系统会显示以下服务
 
 ![image-20240417150111860](Jenkins部署文档.assets/image-20240417150111860.png)
 
 
 
-### 5.2.5windows中后端停止、备份、运行脚本
+#### 5.2.5.windows中后端停止、备份、运行脚本
 
 ![image-20240417150347697](Jenkins部署文档.assets/image-20240417150347697.png)
 
@@ -242,9 +244,9 @@ exit 0
 
 
 
-## 5.3前端脚本编写
+### 5.3.前端脚本编写
 
-### 5.3.1将文件压缩操作安装为系统服务
+#### 5.3.1.将文件压缩操作安装为系统服务
 
 ![image-20240417150833436](Jenkins部署文档.assets/image-20240417150833436.png)
 
@@ -284,9 +286,9 @@ exit
 net start "UnzipFile"
 ```
 
-# 六、操作人员账号权限分配
+## 6.操作人员账号权限分配
 
-## 6.1账号分配
+### 6.1.账号分配
 
 ![image-20240417152924755](Jenkins部署文档.assets/image-20240417152924755.png)
 
@@ -294,12 +296,12 @@ net start "UnzipFile"
 
 
 
-## 6.2权限配置
+### 6.2.权限配置
 
 ![image-20240417153025372](Jenkins部署文档.assets/image-20240417153025372.png)
 
 ![image-20240417153039392](Jenkins部署文档.assets/image-20240417153039392.png)
 
-# 七、总结
+## 7.总结
 
 按照以上操作完之后，我们的项目就能正常构建了。如果构建报错了，请检查下配置是否有误，远程连接出问题，部署的代码是否确实文件导致无法运行等，必要时可尝试将windows重启，避免应SSH问题导致部署失败
