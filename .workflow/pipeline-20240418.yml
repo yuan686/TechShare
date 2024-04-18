@@ -1,0 +1,46 @@
+version: '1.0'
+name: pipeline-20240418
+displayName: pipeline-20240418
+triggers:
+  trigger: auto
+  push:
+    branches:
+      prefix:
+        - master
+  pr:
+    branches:
+      prefix:
+        - master
+variables:
+  ACCESS_TOKEN: 9d5899d574ec2d4f83ef192329ad9da8
+  USERNAME: RMByuan
+stages:
+  - name: stage-1042167b
+    displayName: 自动构建
+    strategy: naturally
+    trigger: auto
+    executor:
+      - RMByuan
+    steps:
+      - step: build@nodejs
+        name: build_nodejs
+        displayName: Nodejs 构建
+        nodeVersion: 18.16.0
+        commands:
+          - npm config set registry https://registry.npmmirror.com
+          - npm install && npm run build && cd docs/.vitepress/dist
+          - git init . && git config --local init.defaultBranch master
+          - git config --global user.email "1976622404@qq.com"
+          - git config --global user.name "GiteeGo Pipeline"
+          - git add . &&  git commit -m "pushed by gitee-go"
+          - git push https://${USERNAME}:${ACCESS_TOKEN}@gitee.com/${GITEE_REPO} master:gt-pages --force
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./docs/.vitepress/dist
+        caches:
+          - ~/.npm
+          - ~/.yarn
+        notify: []
+        strategy:
+          retry: '0'
