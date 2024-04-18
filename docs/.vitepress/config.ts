@@ -2,10 +2,9 @@ import { defineConfig } from 'vitepress'
 import sidebar from './config/sidebar'
 import nav from './config/nav'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Coding Yuan',
-  base: '/TechnologyShare/',
+  base: '/TechShare/',
   titleTemplate: "YuanCode's study notes",
   description: 'This is my study notes recording website.',
   cleanUrls: true,

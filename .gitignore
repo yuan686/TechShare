@@ -1,7 +1,7 @@
 node_modules
+dist
 cache
 
+TechnologyShare.iml
+
 .idea
-/TechnologyShare.iml
-/pnpm-lock.yaml
-/docs/.vitepress/dist/
