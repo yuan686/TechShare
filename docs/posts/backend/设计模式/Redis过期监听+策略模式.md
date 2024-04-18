@@ -1,21 +1,21 @@
-> ## 设计模式的实际应用
->
-> 本篇主要讲设计模式在企业中的实际应用
+## 工厂方法模式+策略模式
 
-# 工厂模式+策略模式
+**设计模式的实际应用**
 
-## 1、需求
+**本篇主要讲设计模式在企业中的实际应用**
+
+### 1、需求
 
 对于活动过期时间、推送时间，系统需要根据过期时间修改活动状态，而对于不同的业务，我们需要不同的处理逻辑。那个我们可以将不同的业务作为一个策略封装起来，而策略的调用入口统一化
 
-## 2、解决方案
+### 2、解决方案
 
 - 通过redis过期监听策略实现
 - 通过MQ延迟消息/死信交换机实现
 
 这里我讲一下redis过期监听策略解决方案
 
-## 3、修改redis配置文件，打开过期监听模式
+### 3、修改redis配置文件，打开过期监听模式
 
 redis.conf配置
 
@@ -23,7 +23,7 @@ redis.conf配置
 notify-keyspace-events Ex
 ```
 
-## 4、编写策略抽象接口（策略调用入口）
+### 4、编写策略抽象接口（策略调用入口）
 
 ```java
 public interface ExpireStrategy {
@@ -36,7 +36,7 @@ public interface ExpireStrategy {
 }
 ```
 
-## 5、编写策略的具体实现类
+### 5、编写策略的具体实现类
 
 > 推送配置监听策略
 
@@ -82,7 +82,7 @@ public class EvaluationPlanExpireStrategy implements ExpireStrategy{
 
 > 虽然我们定义了很多策略，并且单独封装起来了，但是在监听过期key的方法中，还是存在耦合性问题，我们需要通过if去判断用哪个策略。但通过工厂方法模式，我们就能解决这个问题
 
-## 6、编写过期key配置类
+### 6、编写过期key配置类
 
 ```java
 @Getter
@@ -95,7 +95,7 @@ public class RedisExpireListenerConfig {
 }
 ```
 
-## 7、在application.yml中配置过期key和策略（bean名称）之间的关系
+### 7、在application.yml中配置过期key和策略（bean名称）之间的关系
 
 ```yml
 # 缓存过期监听
@@ -110,7 +110,7 @@ expire:
       ....
 ```
 
-## 8、编写策略生成工厂
+### 8、编写策略生成工厂
 
 ```java
 @Component
@@ -147,7 +147,7 @@ public class RedisExpireListenerFactory implements ApplicationContextAware {
 }
 ```
 
-## 9、编写Redis过期监听类
+### 9、编写Redis过期监听类
 
 ```java
 @Service
@@ -186,7 +186,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 }
 ```
 
-## 10、拓展
+### 10、拓展
 
 当我们需要再对优惠券状态做监听时，只需要写一个ExpireStrategy的实现类，并在yml文件中配置key和bean名称的映射关系即可。
 
